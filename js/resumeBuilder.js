@@ -1,78 +1,31 @@
-
-var defaultPlaceholder = "%data%";
-var urlPlaceholder = "#";
-
-var subject = "Steven Miles";
-var role = "Front-End Web Developer";
-
-/*
-    Bio
-*/
-
-var skills = ["programming (java, HTML, javascript, css, php, sql)", "web design", "software testing"];
-
-var formattedName = populateDefaultTag(HTMLheaderName, subject);
-var formattedRole = populateDefaultTag(HTMLheaderRole, " " + role);
-
-var contact =
+var model =
 {
-    "mobile" : "612 360 1087",
-    "email" : "semiles@msn.com",
-    "github" : "howardjmn",
-    "twitter" : "",
-    "location" : "Minneapolis"
-};
+    defaultPlaceholder: "%data%",
+    urlPlaceholder: "#",
+    rowPlaceholder: "%row%",
+    divClose: "</div>",
 
-var bio =
-{
-    "name" : subject,
-    "role" : role,
-    "contacts" : contact,
-    "biopic" : "images/cover.jpeg",
-    "welcomeMessage" : "Hello World!",
-    "skills" : skills
-};
+    subject: "Steven Miles",
+    role: "Front-End Web Developer",
 
-bio.display = function()
-{
-    $("#header").prepend(formattedRole);
-    $("#header").prepend(formattedName);
-
-    $("#mapDiv").append(googleMap);
-
-    $("#header").append(populateDefaultTag(HTMLbioPic, bio.biopic));
-
-    displayIfPopulated("#topContacts", HTMLmobile, bio.contacts.mobile);
-    displayIfPopulated("#topContacts", HTMLemail, bio.contacts.email);
-    displayIfPopulated("#topContacts", HTMLgithub, bio.contacts.github);
-    displayIfPopulated("#topContacts", HTMLtwitter, bio.contacts.twitter);
-    displayIfPopulated("#topContacts", HTMLlocation, bio.contacts.location);
-
-    displayIfPopulated("#footerContacts", HTMLmobile, bio.contacts.mobile);
-    displayIfPopulated("#footerContacts", HTMLemail, bio.contacts.email);
-    displayIfPopulated("#footerContacts", HTMLgithub, bio.contacts.github);
-    displayIfPopulated("#footerContacts", HTMLtwitter, bio.contacts.twitter);
-    displayIfPopulated("#footerContacts", HTMLlocation, bio.contacts.location);
-
-    if (bio.skills.length > 0)
+    bio:
     {
-        $("#header").append(HTMLskillsStart);
-
-        for (var skill = 0; skill < bio.skills.length; skill++)
+        "name" : this.subject,
+        "role" : this.role,
+        "contacts" :
         {
-            displayIfPopulated("#skills", HTMLskills, bio.skills[skill]);
-        }
-    }
-};
+            "mobile" : "612 360 1087",
+            "email" : "semiles@msn.com",
+            "github" : "howardjmn",
+            "twitter" : "",
+            "location" : "Minneapolis"
+        },
+        "biopic" : "images/cover.jpeg",
+        "welcomeMessage" : "Hello World!",
+        "skills" : ["programming (java, HTML, javascript, css, php, sql)", "web design", "software testing"]
+    },
 
-
-/*
-    Work
-*/
-
-var work =
-{
-    "jobs":
+    jobs:
     [
         {
             "title" : "Software Tester",
@@ -98,198 +51,310 @@ var work =
             "location" : "St. Paul, MN",
             "description" : "Wrote code to translate EDI documents (such as Purchase Orders and Invoices) from formats sent by trading partners to formats used by 3M internal systems."
         }
-    ]
+    ],
+
+    education:
+    {
+        "schools":
+        [
+            {
+                "name" : "De Paul University",
+                "location" : "Chicago, IL",
+                "degree" : "Bachelor of Science",
+                "majors" : ["Computer Science", "Mathematics"],
+                "dates" : "1975 - 1979",
+                "url" : "https://www.depaul.edu/Pages/default.aspx"
+            }
+        ],"onlineCourses":
+        [
+            {
+                "title" : "Front-End Web Developer",
+                "school" : "Udacity",
+                "dates" : "2016",
+                "url" : "https://classroom.udacity.com/nanodegrees/nd001/syllabus"
+            }
+        ]
+    },
+
+    projects:
+    {
+        "projects":
+        [
+            {
+                "title" : "First Udacity Project - Hometown paper",
+                "url": "https://htmlpreview.github.io/?https://github.com/howardjmn/HomeTown/blob/master/index.html",
+                "dates" : "2016",
+                "description" : "Sample newspaper webpage",
+                "images" : ["images/city.png"]
+            },
+            {
+                "title" : "Second Udacity Project - Portfolio",
+                "url": "https://htmlpreview.github.io/?https://github.com/howardjmn/Portfolio/blob/master/index.html",
+                "dates" : "2016",
+                "description" : "Sample portfolio webpage",
+                "images" : ["images/sunflower.png", "images/appify.png", "images/bokeh.png"]
+            }
+        ]
+    }
 };
 
-work.display = function()
+var octopus =
 {
-    for (var job = 0; job < work.jobs.length; job++)
+    init: function()
     {
-        $("#workExperience").append(HTMLworkStart);
-        $(".work-entry:last").append
-            (populateDefaultTag(replaceUrl(HTMLworkEmployer, work.jobs[job].url), work.jobs[job].employer) +
-             populateDefaultTag(HTMLworkTitle, work.jobs[job].title) +
-             populateDefaultTag(HTMLworkDates, work.jobs[job].dates) +
-             populateDefaultTag(HTMLworkLocation, work.jobs[job].location) +
-             populateDefaultTag(HTMLworkDescription, work.jobs[job].description));
+        bioView.init();
+        workView.init();
+        educationView.init();
+        projectView.init();
+    },
+
+    getBio: function()
+    {
+        return model.bio;
+    },
+
+    getContacts: function()
+    {
+        return this.getBio().contacts;
+    },
+
+    getSkills: function()
+    {
+        return this.getBio().skills;
+    },
+
+    getJobs: function()
+    {
+        return model.jobs;
+    },
+
+    getSchools: function()
+    {
+        return model.education.schools;
+    },
+
+    getOnlineCourses: function()
+    {
+        return model.education.onlineCourses;
+    },
+
+    getProjects: function()
+    {
+        return model.projects.projects;
+    },
+
+    populateDefaultTag: function(tag, value)
+    {
+        /** Replace the helper.js default data placeholder with the passed value. */
+        return tag.replace(model.defaultPlaceholder, value);
+    },
+
+    displayIfPopulated: function(pageLoc, tag, value)
+    {
+        /** Update the tag/value pair at the specified page locations.  Do not display
+        the tag/value pair if no value is passed. */
+        if (value.length > 0)
+        {
+            $(pageLoc).append(this.populateDefaultTag(tag, value));
+        }
+    },
+
+    replaceUrl: function(originalValue, newUrl)
+    {
+        /** Replace the helper.js default URL placeholder with the passed URL. */
+        return originalValue.replace(model.urlPlaceholder, newUrl);
+    },
+};
+
+var bioView =
+{
+    init: function()
+    {
+        this.header = "#header";
+        this.mapDiv = "#mapDiv";
+        this.topContacts = "#topContacts";
+        this.footerContacts = "#footerContacts";
+        this.skills = "#skills";
+
+        this.formattedName = octopus.populateDefaultTag(HTMLheaderName, model.subject),
+        this.formattedRole = octopus.populateDefaultTag(HTMLheaderRole, " " + model.role),
+
+        this.render();
+    },
+    render: function()
+    {
+        $(this.header).prepend(this.formattedRole);
+        $(this.header).prepend(this.formattedName);
+
+        $(this.mapDiv).append(googleMap);
+
+        $(this.header).append(octopus.populateDefaultTag(HTMLbioPic, octopus.getBio().biopic));
+
+        octopus.displayIfPopulated(this.topContacts, HTMLmobile, octopus.getContacts().mobile);
+        octopus.displayIfPopulated(this.topContacts, HTMLemail, octopus.getContacts().email);
+        octopus.displayIfPopulated(this.topContacts, HTMLgithub, octopus.getContacts().github);
+        octopus.displayIfPopulated(this.topContacts, HTMLtwitter, octopus.getContacts().twitter);
+        octopus.displayIfPopulated(this.topContacts, HTMLlocation, octopus.getContacts().location);
+
+        octopus.displayIfPopulated(this.footerContacts, HTMLmobile, octopus.getContacts().mobile);
+        octopus.displayIfPopulated(this.footerContacts, HTMLemail, octopus.getContacts().email);
+        octopus.displayIfPopulated(this.footerContacts, HTMLgithub, octopus.getContacts().github);
+        octopus.displayIfPopulated(this.footerContacts, HTMLtwitter, octopus.getContacts().twitter);
+        octopus.displayIfPopulated(this.footerContacts, HTMLlocation, octopus.getContacts().location);
+
+        if (octopus.getBio().skills.length > 0)
+        {
+            $(this.header).append(HTMLskillsStart);
+
+            for (var skill = 0; skill < octopus.getSkills().length; skill++)
+            {
+                octopus.displayIfPopulated(this.skills, HTMLskills, octopus.getSkills()[skill]);
+            }
+        }
+    }
+};
+
+var workView =
+{
+    init: function()
+    {
+        this.workExperience = "#workExperience";
+        this.lastWorkEntry = ".work-entry:last";
+
+        this.render();
+    },
+    render: function()
+    {
+        for (var job = 0; job < octopus.getJobs().length; job++)
+        {
+            $(this.workExperience).append(HTMLworkStart);
+            $(this.lastWorkEntry).append
+                (octopus.populateDefaultTag(octopus.replaceUrl(HTMLworkEmployer, octopus.getJobs()[job].url), octopus.getJobs()[job].employer) +
+                 octopus.populateDefaultTag(HTMLworkTitle, octopus.getJobs()[job].title) +
+                 octopus.populateDefaultTag(HTMLworkDates, octopus.getJobs()[job].dates) +
+                 octopus.populateDefaultTag(HTMLworkLocation, octopus.getJobs()[job].location) +
+                 octopus.populateDefaultTag(HTMLworkDescription, octopus.getJobs()[job].description));
+        }
     }
 };
 
 
-/*
-    Education
-*/
-
-var education =
+var educationView =
 {
-    "schools":
-    [
-        {
-            "name" : "De Paul University",
-            "location" : "Chicago, IL",
-            "degree" : "Bachelor of Science",
-            "majors" : ["Computer Science", "Mathematics"],
-            "dates" : "1975 - 1979",
-            "url" : "https://www.depaul.edu/Pages/default.aspx"
-        }
-    ],"onlineCourses":
-    [
-        {
-            "title" : "Front-End Web Developer",
-            "school" : "Udacity",
-            "dates" : "2016",
-            "url" : "https://classroom.udacity.com/nanodegrees/nd001/syllabus"
-        }
-    ]
-};
-
-
-education.display = function()
-{
-    for (school = 0; school < education.schools.length; school++)
+    init: function()
     {
-        $("#education").append(HTMLschoolStart);
+        this.education = "#education";
+        this.lastEducationEntry = ".education-entry:last";
+        this.majorDisplay = "";
+        this.formattedOnlineUrl = "";
+        this.formattedOnlineTitle = "";
+        this.formattedOnlineSchool = "";
+        this.formattedOnlineDates = "";
 
-        var formattedDegree = populateDefaultTag(HTMLschoolDegree, education.schools[school].degree);
-        displayIfPopulated(".education-entry:last", replaceUrl(HTMLschoolName, education.schools[school].url), education.schools[school].name + formattedDegree);
-
-        displayIfPopulated(".education-entry:last", HTMLschoolLocation, education.schools[school].location);
-        displayIfPopulated(".education-entry:last", HTMLschoolDates, education.schools[school].dates);
-
-        var majorDisplay = "";
-
-        if (education.schools[school].majors.length > 0)
+        this.render();
+    },
+    render: function()
+    {
+        console.log("schools: " + octopus.getSchools().length);
+        for (school = 0; school < octopus.getSchools().length; school++)
         {
-            for (var major = 0; major < education.schools[school].majors.length; major++)
+            $(this.education).append(HTMLschoolStart);
+
+            this.formattedDegree = octopus.populateDefaultTag(HTMLschoolDegree, octopus.getSchools()[school].degree);
+            console.log("formattedDegree: " + this.formattedDegree);
+            octopus.displayIfPopulated(this.lastEducationEntry, octopus.replaceUrl(HTMLschoolName, octopus.getSchools()[school].url), octopus.getSchools()[school].name + this.formattedDegree);
+
+            octopus.displayIfPopulated(this.lastEducationEntry, HTMLschoolLocation, octopus.getSchools()[school].location);
+            octopus.displayIfPopulated(this.lastEducationEntry, HTMLschoolDates, octopus.getSchools()[school].dates);
+
+            this.majorDisplay = "";
+
+            if (octopus.getSchools()[school].majors.length > 0)
             {
-                if (major > 0)
+                for (var major = 0; major < octopus.getSchools()[school].majors.length; major++)
                 {
-                    majorDisplay = majorDisplay + ", ";
+                    if (major > 0)
+                    {
+                        this.majorDisplay = this.majorDisplay + ", ";
+                    }
+
+                    this.majorDisplay = this.majorDisplay + octopus.getSchools()[school].majors[major];
                 }
-
-                majorDisplay = majorDisplay + education.schools[school].majors[major];
             }
+
+            octopus.displayIfPopulated(this.lastEducationEntry, HTMLschoolMajor, this.majorDisplay);
         }
 
-        displayIfPopulated(".education-entry:last", HTMLschoolMajor, majorDisplay);
-    }
-
-    if (education.onlineCourses.length > 0)
-    {
-        $("#education").append(HTMLonlineClasses);
-
-        for (course = 0; course < education.onlineCourses.length; course++)
+        if (octopus.getOnlineCourses.length > 0)
         {
-            $("#education").append(HTMLschoolStart);
+            $(this.education).append(HTMLonlineClasses);
 
-            var formattedOnlineUrl = replaceUrl(HTMLonlineTitle, education.onlineCourses[course].url);
-            var formattedOnlineTitle = populateDefaultTag(formattedOnlineUrl, education.onlineCourses[course].title);
-            var formattedOnlineSchool = populateDefaultTag(HTMLonlineSchool, education.onlineCourses[course].school);
-            var formattedOnlineDates = populateDefaultTag(HTMLonlineDates, education.onlineCourses[course].dates);
-
-            $(".education-entry:last").append(formattedOnlineTitle + formattedOnlineSchool);
-            displayIfPopulated(".education-entry:last", HTMLonlineDates, formattedOnlineDates);
-        }
-    }
-};
-
-var projects =
-{
-    "projects":
-    [
-        {
-            "title" : "First Udacity Project - Hometown paper",
-            "url": "https://htmlpreview.github.io/?https://github.com/howardjmn/HomeTown/blob/master/index.html",
-            "dates" : "2016",
-            "description" : "Sample newspaper webpage",
-            "images" : ["images/city.png"]
-        },
-        {
-            "title" : "Second Udacity Project - Portfolio",
-            "url": "https://htmlpreview.github.io/?https://github.com/howardjmn/Portfolio/blob/master/index.html",
-            "dates" : "2016",
-            "description" : "Sample portfolio webpage",
-            "images" : ["images/sunflower.png", "images/appify.png", "images/bokeh.png"]
-        }
-    ]
-};
-
-projects.display = function()
-{
-    for (var project = 0; project < projects.projects.length; project++)
-    {
-        var projectTitle = replaceUrl(HTMLprojectTitle, projects.projects[project].url);
-
-        if (projects.projects[project].images.length === 1)
-        {
-            $("#projects").append(HTMLprojectStart.replace("%row%", "row"));
-
-            $(".project-entry:last").append
-                (HTMLprojectLeft +
-                 populateDefaultTag(projectTitle, projects.projects[project].title) +
-                 populateDefaultTag(HTMLprojectDates, projects.projects[project].dates) +
-                 populateDefaultTag(HTMLprojectDescription, projects.projects[project].description) +
-                 "</div>");
-
-            $(".project-entry:last").append
-                (HTMLprojectRight +
-                populateDefaultTag( HTMLprojectImage, projects.projects[project].images[0]) +
-                 "</div>");
-        }
-        else
-        {
-             $("#projects").append(HTMLprojectStart.replace("%row%", ""));
-
-            $(".project-entry:last").append
-                (populateDefaultTag(projectTitle, projects.projects[project].title) +
-                 populateDefaultTag(HTMLprojectDates, projects.projects[project].dates) +
-                 populateDefaultTag(HTMLprojectDescription, projects.projects[project].description));
-
-            for (var image = 0; image < projects.projects[project].images.length; image++)
+            for (course = 0; course < octopus.getOnlineCourses.length; course++)
             {
-               $(".project-entry:last").append
-                    (populateDefaultTag(HTMLprojectImage, projects.projects[project].images[image]));
+                $(this.education).append(HTMLschoolStart);
+
+                this.formattedOnlineUrl = octopus.replaceUrl(HTMLonlineTitle, octopus.getOnlineCourses[course].url);
+                this.formattedOnlineTitle = octopus.populateDefaultTag(this.formattedOnlineUrl, octopus.getOnlineCourses[course].title);
+                this.formattedOnlineSchool = octopus.populateDefaultTag(HTMLonlineSchool, octopus.getOnlineCourses[course].school);
+                this.formattedOnlineDates = octopus.populateDefaultTag(HTMLonlineDates, octopus.getOnlineCourses[course].dates);
+
+                $(this.lastEducationEntry).append(this.formattedOnlineTitle + this.formattedOnlineSchool);
+                octopus.displayIfPopulated(this.lastEducationEntry, HTMLonlineDates, this.formattedOnlineDates);
+            }
+        }
+    }
+};
+
+var projectView =
+{
+    init: function()
+    {
+        this.projects = "#projects";
+        this.lastProjectEntry = ".project-entry:last";
+        this.projectTitle = "";
+
+        this.render();
+    },
+    render: function()
+    {
+        for (var project = 0; project < octopus.getProjects().length; project++)
+        {
+            this.projectTitle = octopus.replaceUrl(HTMLprojectTitle, octopus.getProjects()[project].url);
+
+            if (octopus.getProjects()[project].images.length === 1)
+            {
+                $(this.projects).append(HTMLprojectStart.replace(model.rowPlaceholder, "row"));
+
+                $(this.lastProjectEntry).append
+                    (HTMLprojectLeft +
+                     octopus.populateDefaultTag(this.projectTitle, octopus.getProjects()[project].title) +
+                     octopus.populateDefaultTag(HTMLprojectDates, octopus.getProjects()[project].dates) +
+                     octopus.populateDefaultTag(HTMLprojectDescription, octopus.getProjects()[project].description) +
+                     model.divClose);
+
+                $(this.lastProjectEntry).append
+                    (HTMLprojectRight +
+                    octopus.populateDefaultTag( HTMLprojectImage, octopus.getProjects()[project].images[0]) +
+                     model.divClose);
+            }
+            else
+            {
+                $(this.projects).append(HTMLprojectStart.replace(model.rowPlaceholder, ""));
+
+                $(this.lastProjectEntry).append
+                    (octopus.populateDefaultTag(this.projectTitle, octopus.getProjects()[project].title) +
+                     octopus.populateDefaultTag(HTMLprojectDates, octopus.getProjects()[project].dates) +
+                     octopus.populateDefaultTag(HTMLprojectDescription, octopus.getProjects()[project].description));
+
+                for (var image = 0; image < octopus.getProjects()[project].images.length; image++)
+                {
+                   $(this.lastProjectEntry).append
+                        (octopus.populateDefaultTag(HTMLprojectImage, octopus.getProjects()[project].images[image]));
+                }
             }
         }
     }
 };
 
 
-bio.display();
-work.display();
-education.display();
-projects.display();
-
-
-/**
-    Functions
-*/
-
-
-/**
-    Update the tag/value pair at the specified page locations.  Do not display
-    the tag/value pair if no value is passed.
-*/
-function displayIfPopulated(pageLoc, tag, value)
-{
-    if (value.length > 0)
-    {
-        $(pageLoc).append(populateDefaultTag(tag, value));
-    }
-}
-
-/**
-    Replace the helper.js default data placeholder with the passed value.
-*/
-function populateDefaultTag(tag, value)
-{
-    return tag.replace(defaultPlaceholder, value);
-}
-
-/**
-    Replace the helper/js default URL placeholder with the passed URL.
-*/
-function replaceUrl(originalValue, newUrl)
-{
-    return originalValue.replace(urlPlaceholder, newUrl);
-}
+octopus.init();
